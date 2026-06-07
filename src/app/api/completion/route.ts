@@ -1,22 +1,22 @@
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
 
-export async function POST() {
+export async function POST(req:Request) {
   try {
+    const { prompt } = await req.json();
     const { text } = await generateText({
-    model: google("gemini-2.0-flash"),
-      prompt: "Explain what an LLM is in simple terms.",
+      model: groq("llama-3.1-8b-instant"),
+     prompt
     });
 
     return Response.json({ text });
   } catch (error) {
     console.error(error);
     return Response.json(
-      {
-        error: "Gemini API request failed",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "API request failed", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
 }
+
+
